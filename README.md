@@ -12,3 +12,12 @@ Create a self-contained browsergame within a physical watergun acting as wifi ho
 * create a fun game
 * graphix
 * soundz
+
+## components
+
+* water gun
+* ESP8266 (webserver, sd-card reader, ..)
+* Teensy 3.1 (processing unit)
+* GY-80 (movement detection)
+* click button (for trigger)
+* LiPo
