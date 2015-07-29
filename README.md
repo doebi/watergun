@@ -2,7 +2,7 @@
 
 Create a self-contained browsergame within a physical watergun acting as wifi hotspot, server and controller.
 
-## steps to suceed
+## steps to succeed
 
 * find suitable watergun
 * fit components in it
