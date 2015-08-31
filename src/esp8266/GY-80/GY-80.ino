@@ -52,7 +52,7 @@ void setup(){
 }
 
 void loop(){
-   getGyroValues();  // This will update x, y, and z with new values
+  getGyroValues();  // This will update x, y, and z with new values
 
   Serial.print("X:");
   Serial.print(x);
