@@ -21,3 +21,9 @@ Create a self-contained browsergame within a physical watergun acting as wifi ho
 * GY-80 (movement detection)
 * click button (for trigger)
 * LiPo
+
+## history
+
+* 13.08.15: (CCCamp15) First working prototype. Trigger is pimped with a pushbutton and sends messages via mqtt. We used this as trigger for a warnlight.
+
+* 31.08.15: (beta1) Better logic and use of mqtt topics. Also added a vibration motor as feedback channel. Now 2-way communication works. \o/ Next step: fancy webinterface with control panel.
