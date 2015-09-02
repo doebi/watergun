@@ -7,13 +7,17 @@
 #include <ESP8266WiFiMulti.h>
 #include <PubSubClient.h>
 
-const String nodeName = "doebi/watergun/";
+String nodeName = "doebi/watergun/";
 
 // pins
 const int trigger  = 0;
 const int vibrator = 5;
 
 int triggerState = HIGH;
+int vibratorState = LOW;
+
+int vibratorStart = 0;
+int vibratorTimeout = 1000;
 
 int isAlive = millis();
 int mil = 0;
@@ -25,11 +29,18 @@ WiFiClient wclient;
 PubSubClient client(wclient, MQTTserver);
 
 void mqtt_callback(const MQTT::Publish& pub) {
-  String action = pub.payload_string();
-  if (action == "vibrate") {
-    digitalWrite(vibrator, HIGH);
-    delay(1000);
-    digitalWrite(vibrator, LOW);
+  String topic = pub.topic();
+  String msg = pub.payload_string();
+  if(topic == "doebi/watergun/vibrator") {
+    if (msg == "ON") {
+      vibratorStart = millis();
+      vibratorState = HIGH;
+      digitalWrite(vibrator, HIGH);
+    }
+    if (msg == "OFF") {
+      vibratorState = LOW;
+      digitalWrite(vibrator, LOW);
+    }
   }
 }
 
@@ -38,12 +49,11 @@ void setup() {
     delay(10);
 	
     wifiMulti.addAP("/dev/lol", "4dprinter");
+    wifiMulti.addAP("ESP-Spielwiese", "ovomaltine");
     
     if(wifiMulti.run() == WL_CONNECTED) {
       Serial.println("Wifi connected");
     }
-    
-    client.publish(nodeName + "heartbeat", 0);
     
     pinMode(trigger, INPUT);
     pinMode(vibrator, OUTPUT);
@@ -62,17 +72,17 @@ void loop() {
     if(wifiMulti.run() == WL_CONNECTED) {
       Serial.println("Wifi connected");
     }
-    delay(1000);
   }
 
     // mqtt
     if (client.connected()) {
       client.loop();
     } else {
-      if (client.connect("node")) {
+      if (client.connect("watergun", "doebi/watergun/online", 0, true, "false")) {
+        client.publish("doebi/watergun/online", "true", true);
         Serial.println("MQTT connected");
 	      client.set_callback(mqtt_callback);
-	      client.subscribe("doebi/watergun/action");
+	      client.subscribe("doebi/watergun/#");
       }
     }
 
@@ -85,5 +95,10 @@ void loop() {
       triggerState = !triggerState;
     }
 
-    delay(100);
+    if(vibratorState == HIGH) {
+      if(mil - vibratorStart >= vibratorTimeout) {
+        digitalWrite(vibrator, LOW);
+        vibratorState = LOW;
+      }
+    }
 }
