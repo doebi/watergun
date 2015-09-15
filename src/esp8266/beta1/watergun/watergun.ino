@@ -1,5 +1,6 @@
 /*
- *  This sketch trys to Connect to the best AP based on a given list
+ * Firmware for an ESP powering a phyiscal watergun becoming a browsergame..
+ * (c) by Christoph (doebi) Döberl
  *
  */
 
